@@ -100,6 +100,7 @@ impl Rat {
             RatActions::MoveDir(dir) => self.move_dir(dir),
             RatActions::MoveTo(pos) => self.move_to(pos),
             RatActions::SetColor(color) => self.set_color(color),
+            RatActions::SetSize(size) => self.size = size,
             RatActions::Nothing => {}
         }
 
