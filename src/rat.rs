@@ -18,7 +18,7 @@ impl Rat {
             size,
             field: [field[0] * 2, field[1]],
             color: Color::White,
-            actions: Vec::new(),
+            actions: vec![RatActions::Nothing; 10],
         }
     }
 
@@ -75,6 +75,7 @@ impl Rat {
         match action.clone() {
             RatActions::MoveDir(dir) => self.move_dir(dir),
             RatActions::MoveTo(pos) => self.move_to(pos),
+            RatActions::Nothing => {}
         }
 
         self.actions.remove(0);
