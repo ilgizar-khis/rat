@@ -30,12 +30,12 @@ fn gen_color(color: String) -> Option<Color> {
 }
 
 impl Rat {
-    pub fn new(pos: [u16; 2], size: u16, field: [u16; 2], color: Color) -> Self {
+    pub fn new(pos: [u16; 2], size: u16, field: [u16; 2], color: String) -> Self {
         Self {
             pos: [pos[0] * 2, pos[1]],
             size,
             field: [field[0] * 2, field[1]],
-            color,
+            color: gen_color(color).unwrap_or(Color::White),
             actions: vec![RatActions::Nothing; 10],
         }
     }
