@@ -1,6 +1,12 @@
-use std::{env, path::PathBuf, time::Duration};
-
 use crossterm::event::{self, Event, KeyCode};
+use ratatui::Frame;
+use ratatui::layout::Constraint::{Fill, Length};
+use ratatui::layout::HorizontalAlignment::Center;
+use ratatui::layout::Layout;
+use ratatui::widgets::{Block, Borders, Paragraph};
+use std::env;
+use std::path::PathBuf;
+use std::time::Duration;
 
 struct App {
     title: String,
@@ -16,7 +22,7 @@ impl App {
     pub fn run(&mut self) -> Result<(), String> {
         ratatui::run(|term| {
             loop {
-                term.draw(|frame| frame.render_widget(self.title.clone(), frame.area()))
+                term.draw(|frame| self.render(frame))
                     .map_err(|e| e.to_string())?;
                 if event::poll(Duration::from_millis(100)).map_err(|e| e.to_string())? {
                     if let Event::Key(key) = event::read().map_err(|e| e.to_string())? {
@@ -28,6 +34,17 @@ impl App {
                 }
             }
         })
+    }
+
+    fn render(&self, frame: &mut Frame) {
+        let [head, body] = Layout::vertical([Length(2), Fill(1)]).areas(frame.area());
+
+        let title_block = Block::new().borders(Borders::BOTTOM);
+        let title_bar = Paragraph::new(self.title.clone())
+            .block(title_block)
+            .alignment(Center);
+
+        frame.render_widget(title_bar, head);
     }
 }
 
