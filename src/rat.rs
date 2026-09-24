@@ -11,6 +11,23 @@ pub struct Rat {
     actions: Vec<RatActions>,
 }
 
+fn gen_color(color: String) -> Option<Color> {
+    if color.starts_with("#") {
+        if let Ok(hex) = u32::from_str_radix(&color[1..], 16) {
+            return Some(Color::Rgb(
+                ((hex >> 16) & 0xFF) as u8,
+                ((hex >> 8) & 0xFF) as u8,
+                (hex & 0xFF) as u8,
+            ));
+        } else {
+            if let Ok(color) = color.parse() {
+                return Some(color);
+            }
+        }
+    }
+    None
+}
+
 impl Rat {
     pub fn new(pos: [u16; 2], size: u16, field: [u16; 2]) -> Self {
         Self {
