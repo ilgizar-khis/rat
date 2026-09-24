@@ -6,7 +6,6 @@ use crate::actions::RatActions;
 pub struct Rat {
     pos: [u16; 2],
     size: u16,
-    field: [u16; 2],
     color: Color,
     actions: Vec<RatActions>,
 }
@@ -30,11 +29,10 @@ fn gen_color(color: String) -> Option<Color> {
 }
 
 impl Rat {
-    pub fn new(pos: [u16; 2], size: u16, field: [u16; 2], color: String) -> Self {
+    pub fn new(pos: [u16; 2], size: u16, color: String) -> Self {
         Self {
             pos: [pos[0] * 2, pos[1]],
             size,
-            field: [field[0] * 2, field[1]],
             color: gen_color(color).unwrap_or(Color::White),
             actions: vec![RatActions::Nothing; 10],
         }
@@ -60,27 +58,15 @@ impl Rat {
 
     fn move_dir(&mut self, dir: String) {
         match dir.as_str() {
-            "right" => {
-                if self.pos[0] + 2 < self.field[0] {
-                    self.pos[0] += 2;
-                }
-            }
+            "right" => self.pos[0] += 2,
             "left" => self.pos[0] = self.pos[0].saturating_sub(2),
-            "down" => {
-                if self.pos[1] + 1 < self.field[1] {
-                    self.pos[1] += 1;
-                }
-            }
+            "down" => self.pos[1] += 1,
             "up" => self.pos[1] = self.pos[1].saturating_sub(1),
             _ => {}
         }
     }
 
     fn move_to(&mut self, new_pos: [u16; 2]) {
-        if new_pos[0] * 2 > self.field[0] || new_pos[1] > self.field[1] {
-            return;
-        }
-
         self.pos[0] = new_pos[0] * 2;
         self.pos[1] = new_pos[1];
     }
