@@ -73,6 +73,10 @@ fn main() -> Result<(), String> {
     let path_buf = PathBuf::from(path);
 
     let mut app = App::new(path);
+
+    let mut rat = Rat::new([0, 0], 1, [30, 30]);
+    let id = app.add_rat(rat);
+    println!("{id}");
     app.run()?;
     Ok(())
 }
