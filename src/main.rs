@@ -3,6 +3,7 @@ use ratatui::Frame;
 use ratatui::layout::Constraint::{Fill, Length};
 use ratatui::layout::HorizontalAlignment::Center;
 use ratatui::layout::Layout;
+use ratatui::style::Stylize;
 use ratatui::widgets::{Block, Borders, Paragraph};
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -69,7 +70,7 @@ impl App {
         id
     }
 
-    fn render(&self, frame: &mut Frame) {
+    fn render(&mut self, frame: &mut Frame) {
         let [head, body] = Layout::vertical([Length(2), Fill(1)]).areas(frame.area());
 
         let title_block = Block::new().borders(Borders::BOTTOM);
@@ -77,10 +78,15 @@ impl App {
             .block(title_block)
             .alignment(Center);
 
-        for rat in self.rats.values() {
+        for rat in self.rats.values_mut() {
             let rect = rat.calc(body);
             let block = rat.get_block();
             frame.render_widget(block, rect);
+
+            for tail in rat.get_tails() {
+                let tail_block = Block::default().bg(tail.color);
+                frame.render_widget(tail_block, tail.rect);
+            }
         }
 
         frame.render_widget(title_bar, head);

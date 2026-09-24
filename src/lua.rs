@@ -15,8 +15,9 @@ pub fn create_lua_functions(app: &Rc<RefCell<App>>) -> Result<Lua> {
         let pos: [u16; 2] = opts.get("pos").unwrap_or([0; 2]);
         let size: u16 = opts.get("size").unwrap_or(1);
         let color: String = opts.get("color").unwrap_or("white".to_string());
+        let draw: bool = opts.get("draw").unwrap_or(true);
 
-        let rat = Rat::new(pos, size, color);
+        let rat = Rat::new(pos, size, color, draw);
         let id = lua_new_rat_app.borrow_mut().add_rat(rat);
         Ok(id)
     })?;
@@ -100,6 +101,25 @@ pub fn create_lua_functions(app: &Rc<RefCell<App>>) -> Result<Lua> {
         })
         .unwrap();
     rat.set("set_size", rat_set_size)?;
+
+    let lua_set_draw_app = Rc::clone(app);
+    let rat_set_draw = lua
+        .create_function(move |_, opts: Table| {
+            let id: String = opts.get("id")?;
+            let draw: bool = opts.get("draw")?;
+            let mut app = lua_set_draw_app.borrow_mut();
+            match app.rats.get_mut(&id) {
+                Some(robot) => {
+                    robot.add_action(RatActions::SetDraw(draw), 1);
+                    Ok(())
+                }
+                None => Err(mlua::Error::RuntimeError(format!(
+                    "robot with id '{id}' not found"
+                ))),
+            }
+        })
+        .unwrap();
+    rat.set("set_draw", rat_set_draw)?;
 
     lua.globals().set("rat", rat)?;
 

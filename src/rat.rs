@@ -3,11 +3,19 @@ use ratatui::{layout::Rect, style::Stylize, widgets::Block};
 
 use crate::actions::RatActions;
 
+#[derive(Clone, Debug)]
+pub struct Tail {
+    pub rect: Rect,
+    pub color: Color,
+}
+
 pub struct Rat {
     pos: [u16; 2],
     size: u16,
     color: Color,
     actions: Vec<RatActions>,
+    tails: Vec<Tail>,
+    draw: bool,
 }
 
 fn gen_color(color: String) -> Option<Color> {
@@ -29,12 +37,14 @@ fn gen_color(color: String) -> Option<Color> {
 }
 
 impl Rat {
-    pub fn new(pos: [u16; 2], size: u16, color: String) -> Self {
+    pub fn new(pos: [u16; 2], size: u16, color: String, draw: bool) -> Self {
         Self {
             pos: [pos[0] * 2, pos[1]],
             size,
             color: gen_color(color).unwrap_or(Color::White),
             actions: vec![RatActions::Nothing; 10],
+            tails: Vec::new(),
+            draw,
         }
     }
 
@@ -87,18 +97,30 @@ impl Rat {
             RatActions::MoveTo(pos) => self.move_to(pos),
             RatActions::SetColor(color) => self.set_color(color),
             RatActions::SetSize(size) => self.size = size,
+            RatActions::SetDraw(draw) => self.draw = draw,
             RatActions::Nothing => {}
         }
 
         self.actions.remove(0);
     }
 
-    pub fn calc(&self, area: Rect) -> Rect {
-        Rect {
+    pub fn get_tails(&self) -> Vec<Tail> {
+        self.tails.clone()
+    }
+
+    pub fn calc(&mut self, area: Rect) -> Rect {
+        let rect = Rect {
             x: area.x + self.pos[0],
             y: area.y + self.pos[1],
             width: self.get_width(),
             height: self.get_height(),
+        };
+        if self.draw {
+            self.tails.push(Tail {
+                rect,
+                color: self.color,
+            });
         }
+        rect
     }
 }
