@@ -48,6 +48,15 @@ impl Rat {
         }
     }
 
+    fn move_to(&mut self, new_pos: [u16; 2]) {
+        if new_pos[0] * 2 > self.field[0] && new_pos[1] > self.field[1] {
+            return;
+        }
+
+        self.pos[0] = new_pos[0] * 2;
+        self.pos[1] = new_pos[1];
+    }
+
     pub fn calc(&self, area: Rect) -> Rect {
         Rect {
             x: area.x + self.pos[0],
