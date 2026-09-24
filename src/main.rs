@@ -3,6 +3,8 @@ use ratatui::Frame;
 use ratatui::layout::Constraint::{Fill, Length};
 use ratatui::layout::HorizontalAlignment::Center;
 use ratatui::layout::Layout;
+use ratatui::style::Color;
+use ratatui::style::Style;
 use ratatui::widgets::{Block, Borders, Paragraph};
 use std::collections::HashMap;
 use std::env;
@@ -59,6 +61,12 @@ impl App {
         let title_bar = Paragraph::new(self.title.clone())
             .block(title_block)
             .alignment(Center);
+
+        for rat in self.rats.values() {
+            let rect = rat.calc(body);
+            let block = Block::default().style(Style::default().bg(Color::White));
+            frame.render_widget(block, rect);
+        }
 
         frame.render_widget(title_bar, head);
     }
