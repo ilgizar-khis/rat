@@ -3,8 +3,8 @@ use ratatui::Frame;
 use ratatui::layout::Constraint::{Fill, Length};
 use ratatui::layout::HorizontalAlignment::Center;
 use ratatui::layout::Layout;
-use ratatui::style::Color;
 use ratatui::style::Style;
+use ratatui::style::{Color, Stylize};
 use ratatui::widgets::{Block, Borders, Paragraph};
 use std::collections::HashMap;
 use std::env;
@@ -64,7 +64,7 @@ impl App {
 
         for rat in self.rats.values() {
             let rect = rat.calc(body);
-            let block = Block::default().style(Style::default().bg(Color::White));
+            let block = rat.get_block();
             frame.render_widget(block, rect);
         }
 
