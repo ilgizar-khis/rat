@@ -30,6 +30,24 @@ impl Rat {
         Block::default().bg(self.color.clone())
     }
 
+    fn move_dir(&mut self, dir: String) {
+        match dir.as_str() {
+            "right" => {
+                if self.pos[0] + 2 < self.field[0] {
+                    self.pos[0] += 2;
+                }
+            }
+            "left" => self.pos[0] = self.pos[0].saturating_sub(2),
+            "down" => {
+                if self.pos[1] + 1 < self.field[1] {
+                    self.pos[1] += 1;
+                }
+            }
+            "up" => self.pos[1] = self.pos[1].saturating_sub(1),
+            _ => {}
+        }
+    }
+
     pub fn calc(&self, area: Rect) -> Rect {
         Rect {
             x: area.x + self.pos[0],
