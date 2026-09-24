@@ -1,11 +1,14 @@
 use ratatui::style::Color;
 use ratatui::{layout::Rect, style::Stylize, widgets::Block};
 
+use crate::actions::RatActions;
+
 pub struct Rat {
     pos: [u16; 2],
     size: u16,
     field: [u16; 2],
     color: Color,
+    actions: Vec<RatActions>,
 }
 
 impl Rat {
@@ -15,11 +18,18 @@ impl Rat {
             size,
             field: [field[0] * 2, field[1]],
             color: Color::White,
+            actions: Vec::new(),
         }
     }
 
     fn get_width(&self) -> u16 {
         self.size * 2
+    }
+
+    pub fn add_action(&mut self, action: RatActions, times: usize) {
+        for _ in 0..times {
+            self.actions.push(action.clone());
+        }
     }
 
     fn get_height(&self) -> u16 {
