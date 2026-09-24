@@ -5,5 +5,9 @@ edition = "2024"
 
 [dependencies]
 crossterm = "0.29.0"
-mlua = "0.12.1"
+mlua = { 
+	version = "0.12.1", 
+	default-features = false, 
+	features = [ "lua55", "vendored" ]
+}
 ratatui = "0.30.2"
