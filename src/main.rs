@@ -4,9 +4,11 @@ use ratatui::layout::Constraint::{Fill, Length};
 use ratatui::layout::HorizontalAlignment::Center;
 use ratatui::layout::Layout;
 use ratatui::widgets::{Block, Borders, Paragraph};
+use std::cell::RefCell;
 use std::collections::HashMap;
 use std::env;
 use std::path::PathBuf;
+use std::rc::Rc;
 use std::time::Duration;
 
 use actions::RatActions;
@@ -93,8 +95,12 @@ fn main() -> Result<(), String> {
 
     let path_buf = PathBuf::from(path);
 
-    let mut app = App::new(path);
+    let app = Rc::new(RefCell::new(App::new(path)));
 
-    app.run()?;
+    let lua = lua::create_lua_functions(&app).map_err(|e| e.to_string())?;
+
+    lua.load(path_buf).exec().map_err(|e| e.to_string())?;
+
+    app.borrow_mut().run()?;
     Ok(())
 }
