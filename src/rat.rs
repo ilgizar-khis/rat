@@ -19,12 +19,13 @@ fn gen_color(color: String) -> Option<Color> {
                 ((hex >> 8) & 0xFF) as u8,
                 (hex & 0xFF) as u8,
             ));
-        } else {
-            if let Ok(color) = color.parse() {
-                return Some(color);
-            }
+        }
+    } else {
+        if let Ok(color) = color.parse() {
+            return Some(color);
         }
     }
+
     None
 }
 
