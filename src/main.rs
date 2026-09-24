@@ -13,6 +13,7 @@ use actions::RatActions;
 use rat::Rat;
 
 mod actions;
+mod lua;
 mod rat;
 
 struct App {
@@ -94,11 +95,6 @@ fn main() -> Result<(), String> {
 
     let mut app = App::new(path);
 
-    let mut rat = Rat::new([0, 0], 1, [30, 30]);
-    rat.add_action(RatActions::MoveTo([10, 10]), 1);
-    rat.add_action(RatActions::MoveDir("right".to_string()), 10);
-    rat.add_action(RatActions::SetColor("red".to_string()), 1);
-    let id = app.add_rat(rat);
     app.run()?;
     Ok(())
 }
