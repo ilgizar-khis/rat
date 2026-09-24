@@ -1,3 +1,5 @@
+use std::{env, path::PathBuf};
+
 struct App {
     title: String,
 }
@@ -10,6 +12,15 @@ impl App {
     }
 }
 
-fn main() {
-    let app = App::new("hello world");
+fn main() -> Result<(), ()> {
+    let args: Vec<String> = env::args().collect();
+    let Some(path) = args.get(1) else {
+        println!("You need to enter the name of the Lua file.");
+        return Ok(());
+    };
+
+    let path_buf = PathBuf::from(path);
+
+    let app = App::new(path);
+    Ok(())
 }
