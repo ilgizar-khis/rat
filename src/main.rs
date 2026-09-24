@@ -12,7 +12,6 @@ use std::path::PathBuf;
 use std::rc::Rc;
 use std::time::Duration;
 
-use actions::RatActions;
 use rat::Rat;
 
 mod actions;
@@ -44,21 +43,20 @@ impl App {
                     rat.next_step();
                 }
 
-                if event::poll(Duration::from_millis(50)).map_err(|e| e.to_string())? {
-                    if self.key_handle()? {
-                        break Ok(());
-                    }
+                if event::poll(Duration::from_millis(50)).map_err(|e| e.to_string())?
+                    && self.key_handle()?
+                {
+                    break Ok(());
                 }
             }
         })
     }
 
     fn key_handle(&mut self) -> Result<bool, String> {
-        if let Event::Key(key) = event::read().map_err(|e| e.to_string())? {
-            match key.code {
-                KeyCode::Char('q') => return Ok(true),
-                _ => {}
-            }
+        if let Event::Key(key) = event::read().map_err(|e| e.to_string())?
+            && let KeyCode::Char('q') = key.code
+        {
+            return Ok(true);
         }
         Ok(false)
     }

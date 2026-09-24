@@ -19,8 +19,8 @@ pub struct Rat {
 }
 
 fn gen_color(color: String) -> Option<Color> {
-    if color.starts_with("#") {
-        if let Ok(hex) = u32::from_str_radix(&color[1..], 16) {
+    if let Some(color_strip) = color.strip_prefix("x") {
+        if let Ok(hex) = u32::from_str_radix(color_strip, 16) {
             return Some(Color::Rgb(
                 ((hex >> 16) & 0xFF) as u8,
                 ((hex >> 8) & 0xFF) as u8,
@@ -63,7 +63,7 @@ impl Rat {
     }
 
     pub fn get_block(&self) -> Block<'_> {
-        Block::default().bg(self.color.clone())
+        Block::default().bg(self.color)
     }
 
     fn move_dir(&mut self, dir: String) {
@@ -88,7 +88,7 @@ impl Rat {
     }
 
     pub fn next_step(&mut self) {
-        let Some(action) = self.actions.get(0) else {
+        let Some(action) = self.actions.first() else {
             return;
         };
 
