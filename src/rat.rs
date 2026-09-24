@@ -85,6 +85,12 @@ impl Rat {
         self.pos[1] = new_pos[1];
     }
 
+    fn set_color(&mut self, color: String) {
+        if let Some(color) = gen_color(color) {
+            self.color = color
+        }
+    }
+
     pub fn next_step(&mut self) {
         let Some(action) = self.actions.get(0) else {
             return;
