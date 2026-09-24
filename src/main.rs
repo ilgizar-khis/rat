@@ -9,6 +9,7 @@ use std::env;
 use std::path::PathBuf;
 use std::time::Duration;
 
+use actions::RatActions;
 use rat::Rat;
 
 mod actions;
@@ -34,16 +35,28 @@ impl App {
             loop {
                 term.draw(|frame| self.render(frame))
                     .map_err(|e| e.to_string())?;
+
+                for rat in self.rats.values_mut() {
+                    rat.next_step();
+                }
+
                 if event::poll(Duration::from_millis(100)).map_err(|e| e.to_string())? {
-                    if let Event::Key(key) = event::read().map_err(|e| e.to_string())? {
-                        match key.code {
-                            KeyCode::Char('q') => break Ok(()),
-                            _ => {}
-                        }
+                    if self.key_handle()? {
+                        break Ok(());
                     }
                 }
             }
         })
+    }
+
+    fn key_handle(&mut self) -> Result<bool, String> {
+        if let Event::Key(key) = event::read().map_err(|e| e.to_string())? {
+            match key.code {
+                KeyCode::Char('q') => return Ok(true),
+                _ => {}
+            }
+        }
+        Ok(false)
     }
 
     pub fn add_rat(&mut self, rat: Rat) -> String {
@@ -82,8 +95,9 @@ fn main() -> Result<(), String> {
     let mut app = App::new(path);
 
     let mut rat = Rat::new([0, 0], 1, [30, 30]);
+    rat.add_action(RatActions::MoveTo([10, 10]), 1);
+    rat.add_action(RatActions::MoveDir("right".to_string()), 10);
     let id = app.add_rat(rat);
-    println!("{id}");
     app.run()?;
     Ok(())
 }

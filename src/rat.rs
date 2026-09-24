@@ -67,9 +67,9 @@ impl Rat {
         self.pos[1] = new_pos[1];
     }
 
-    pub fn next_step(&mut self) -> bool {
+    pub fn next_step(&mut self) {
         let Some(action) = self.actions.get(0) else {
-            return false;
+            return;
         };
 
         match action.clone() {
@@ -78,8 +78,6 @@ impl Rat {
         }
 
         self.actions.remove(0);
-
-        true
     }
 
     pub fn calc(&self, area: Rect) -> Rect {
