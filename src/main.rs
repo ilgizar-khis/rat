@@ -4,6 +4,7 @@ use ratatui::layout::Constraint::{Fill, Length};
 use ratatui::layout::HorizontalAlignment::Center;
 use ratatui::layout::Layout;
 use ratatui::widgets::{Block, Borders, Paragraph};
+use std::collections::HashMap;
 use std::env;
 use std::path::PathBuf;
 use std::time::Duration;
@@ -14,12 +15,16 @@ mod rat;
 
 struct App {
     title: String,
+    rats: HashMap<String, Rat>,
+    last_id: usize,
 }
 
 impl App {
     pub fn new(title: &str) -> Self {
         Self {
             title: title.to_string(),
+            rats: HashMap::new(),
+            last_id: 0,
         }
     }
 
@@ -38,6 +43,13 @@ impl App {
                 }
             }
         })
+    }
+
+    pub fn add_rat(&mut self, rat: Rat) -> String {
+        self.last_id += 1;
+        let id = format!("rat #{}", self.last_id);
+        self.rats.insert(id.clone(), rat);
+        id
     }
 
     fn render(&self, frame: &mut Frame) {
