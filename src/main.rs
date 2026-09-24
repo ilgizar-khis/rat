@@ -12,11 +12,10 @@ impl App {
     }
 }
 
-fn main() -> Result<(), ()> {
+fn main() -> Result<(), String> {
     let args: Vec<String> = env::args().collect();
     let Some(path) = args.get(1) else {
-        println!("You need to enter the name of the Lua file.");
-        return Ok(());
+        return Err("You need to enter the name of the Lua file.".to_string());
     };
 
     let path_buf = PathBuf::from(path);
