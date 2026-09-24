@@ -40,7 +40,7 @@ impl App {
                     rat.next_step();
                 }
 
-                if event::poll(Duration::from_millis(100)).map_err(|e| e.to_string())? {
+                if event::poll(Duration::from_millis(50)).map_err(|e| e.to_string())? {
                     if self.key_handle()? {
                         break Ok(());
                     }
@@ -97,6 +97,7 @@ fn main() -> Result<(), String> {
     let mut rat = Rat::new([0, 0], 1, [30, 30]);
     rat.add_action(RatActions::MoveTo([10, 10]), 1);
     rat.add_action(RatActions::MoveDir("right".to_string()), 10);
+    rat.add_action(RatActions::SetColor("red".to_string()), 1);
     let id = app.add_rat(rat);
     app.run()?;
     Ok(())
