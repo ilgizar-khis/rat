@@ -67,6 +67,21 @@ impl Rat {
         self.pos[1] = new_pos[1];
     }
 
+    pub fn next_step(&mut self) -> bool {
+        let Some(action) = self.actions.get(0) else {
+            return false;
+        };
+
+        match action.clone() {
+            RatActions::MoveDir(dir) => self.move_dir(dir),
+            RatActions::MoveTo(pos) => self.move_to(pos),
+        }
+
+        self.actions.remove(0);
+
+        true
+    }
+
     pub fn calc(&self, area: Rect) -> Rect {
         Rect {
             x: area.x + self.pos[0],
