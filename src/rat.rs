@@ -59,7 +59,7 @@ impl Rat {
     }
 
     fn move_to(&mut self, new_pos: [u16; 2]) {
-        if new_pos[0] * 2 > self.field[0] && new_pos[1] > self.field[1] {
+        if new_pos[0] * 2 > self.field[0] || new_pos[1] > self.field[1] {
             return;
         }
 
