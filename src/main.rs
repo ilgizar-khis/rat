@@ -3,8 +3,6 @@ use ratatui::Frame;
 use ratatui::layout::Constraint::{Fill, Length};
 use ratatui::layout::HorizontalAlignment::Center;
 use ratatui::layout::Layout;
-use ratatui::style::Style;
-use ratatui::style::{Color, Stylize};
 use ratatui::widgets::{Block, Borders, Paragraph};
 use std::collections::HashMap;
 use std::env;
@@ -13,6 +11,7 @@ use std::time::Duration;
 
 use rat::Rat;
 
+mod actions;
 mod rat;
 
 struct App {
